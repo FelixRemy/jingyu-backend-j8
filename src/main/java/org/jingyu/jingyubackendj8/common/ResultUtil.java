@@ -14,7 +14,7 @@ public class ResultUtil {
      * @return
      */
     public static <T> BaseResponse<T> success(T data) {
-        return new BaseResponse<>(0, data, "ok");
+        return new BaseResponse<>(BaseResponse.SUCCESS_CODE, data, "ok");
     }
 
 

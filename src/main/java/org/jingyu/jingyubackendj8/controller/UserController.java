@@ -1,6 +1,7 @@
 package org.jingyu.jingyubackendj8.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.jingyu.jingyubackendj8.annotation.Log;
 import org.jingyu.jingyubackendj8.common.BaseResponse;
 import org.jingyu.jingyubackendj8.common.ResultUtil;
 import org.jingyu.jingyubackendj8.mapper.UserMapper;
@@ -34,6 +35,7 @@ public class UserController {
     /**
      * 注册
      */
+    @Log(module = "用户管理", desc = "用户注册", recordParam = true, recordResult = true)
     @PostMapping("/register")
     public BaseResponse<?> register(@RequestBody User user) {
         // 密码加密
@@ -45,6 +47,7 @@ public class UserController {
     /**
      * 登录
      */
+    @Log(module = "用户管理", desc = "用户登录", recordParam = true, recordResult = true)
     @PostMapping("/login")
     public BaseResponse<String> login(@RequestBody User loginDto) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
@@ -66,6 +69,7 @@ public class UserController {
     /**
      * 退出登录
      */
+    @Log(module = "用户管理", desc = "用户登出", recordParam = true, recordResult = true)
     @PostMapping("/logout")
     public BaseResponse<?> logout(HttpServletRequest request) {
         String token = request.getHeader("Authorization").substring(7);
