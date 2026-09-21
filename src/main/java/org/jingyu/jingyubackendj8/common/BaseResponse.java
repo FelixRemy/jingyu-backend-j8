@@ -17,8 +17,6 @@ public class BaseResponse<T> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public static final int SUCCESS_CODE = 0;
-    public static final int BUSINESS_FAIL_CODE = 400;
-    public static final int SYSTEM_FAIL_CODE = 500;
 
     private int code;
 

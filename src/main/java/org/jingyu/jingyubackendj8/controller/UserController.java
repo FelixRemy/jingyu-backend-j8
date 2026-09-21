@@ -3,7 +3,9 @@ package org.jingyu.jingyubackendj8.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.jingyu.jingyubackendj8.annotation.Log;
 import org.jingyu.jingyubackendj8.common.BaseResponse;
+import org.jingyu.jingyubackendj8.common.ErrorCode;
 import org.jingyu.jingyubackendj8.common.ResultUtil;
+import org.jingyu.jingyubackendj8.exception.BusinessException;
 import org.jingyu.jingyubackendj8.mapper.UserMapper;
 import org.jingyu.jingyubackendj8.model.entity.User;
 import org.jingyu.jingyubackendj8.util.JwtUtil;
@@ -54,11 +56,10 @@ public class UserController {
         wrapper.eq("user_account", loginDto.getUserAccount());
         User dbUser = userMapper.selectOne(wrapper);
         if (dbUser == null) {
-            return ResultUtil.error(400, "账号不存在");
+            throw new BusinessException(ErrorCode.ACCOUNT_NOT_EXIST);
         }
-        // 校验密码
         if (!passwordUtil.match(loginDto.getUserPassword(), dbUser.getUserPassword())) {
-            return ResultUtil.error(400, "密码错误");
+            throw new BusinessException(ErrorCode.PASSWORD_ERROR);
         }
         // 生成JWT，携带id、账号、角色
         String token = jwtUtil.generateToken(dbUser.getId(), dbUser.getUserAccount(), dbUser.getUserRole());
@@ -72,7 +73,11 @@ public class UserController {
     @Log(module = "用户管理", desc = "用户登出", recordParam = true, recordResult = true)
     @PostMapping("/logout")
     public BaseResponse<?> logout(HttpServletRequest request) {
-        String token = request.getHeader("Authorization").substring(7);
+        String authorization = request.getHeader("Authorization");
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN);
+        }
+        String token = authorization.substring(7);
         redisUtil.del("token:" + token);
         return ResultUtil.success("退出登录成功");
     }

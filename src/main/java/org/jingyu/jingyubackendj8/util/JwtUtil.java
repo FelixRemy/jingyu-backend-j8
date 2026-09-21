@@ -3,7 +3,6 @@ package org.jingyu.jingyubackendj8.util;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -20,9 +19,12 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String secret;
 
-    @Getter
     @Value("${jwt.expire}")
     private long expire;
+
+    public long getExpire() {
+        return expire;
+    }
 
     // 统一获取密钥：secret配置文件中存放base64字符串
     private SecretKey getSecretKey() {
